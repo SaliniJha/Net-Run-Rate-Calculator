@@ -17,16 +17,7 @@
         ICC NRR Calculator
       </a>
       <nav class="flex items-center gap-4 text-sm font-medium">
-        <a href="{{ url_for('index') }}" class="hover:text-blue-200 transition">Setup</a>
-        <a href="{{ url_for('add_match') }}" class="hover:text-blue-200 transition">Add Match</a>
-        <a href="{{ url_for('standings') }}" class="hover:text-blue-200 transition">Standings</a>
-        <form action="{{ url_for('reset') }}" method="post" class="inline"
-              x-data
-              @submit.prevent="
-                if (confirm('Reset entire tournament? This cannot be undone.')) $el.submit();
-              ">
-          <button type="submit" class="text-red-300 hover:text-red-100 transition">Reset</button>
-        </form>
+        <a href="{{ url_for('index') }}" class="hover:text-blue-200 transition">Tournaments</a>
       </nav>
     </div>
   </header>

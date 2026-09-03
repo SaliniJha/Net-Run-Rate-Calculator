@@ -4,7 +4,7 @@
 {% block content %}
   {% set match_json = 'null' %}
   {% set heading = 'Add Match' %}
-  {% set action_url = url_for('add_match') %}
+  {% set action_url = url_for('add_match', tournament_id=tournament.id) %}
   {% set submit_label = 'Add Match' %}
   {% include "_match_form.html" %}
 {% endblock %}

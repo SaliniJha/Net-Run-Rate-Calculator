@@ -5,6 +5,7 @@
 function setupForm() {
   return {
     form: {
+      name: '',
       format_quota: '20',
     },
   };
@@ -71,31 +72,6 @@ function matchForm(initial) {
         }
       }
       return Object.keys(this.errors).length === 0;
-    },
-  };
-}
-
-function standingsView() {
-  return {
-    loading: false,
-    async refresh() {
-      this.loading = true;
-      try {
-        const resp = await fetch('/standings/json');
-        const data = await resp.json();
-        if (data.table && data.table.length > 0) {
-          this.renderTable(data.table);
-        } else {
-          window.location.reload();
-        }
-      } catch (e) {
-        window.location.reload();
-      } finally {
-        this.loading = false;
-      }
-    },
-    renderTable(table) {
-      window.location.reload();
     },
   };
 }
