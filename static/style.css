@@ -1,0 +1,11 @@
+/* Custom styles on top of Tailwind */
+
+/* Tabular numbers for numeric table columns */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Smooth table row transitions */
+tbody tr {
+  transition: background-color 0.15s ease;
+}

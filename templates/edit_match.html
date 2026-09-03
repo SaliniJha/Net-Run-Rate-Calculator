@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Edit Match — ICC NRR Calculator{% endblock %}
+
+{% block content %}
+  {% set match_json = match_json|default('null') %}
+  {% set heading = 'Edit Match' %}
+  {% set action_url = url_for('edit_match', match_index=match_index) %}
+  {% set submit_label = 'Save Changes' %}
+  {% include "_match_form.html" %}
+{% endblock %}

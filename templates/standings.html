@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Standings — ICC NRR Calculator{% endblock %}
+
+{% block content %}
+<div x-data="standingsView()" class="space-y-4">
+
+  <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+    <div>
+      <h1 class="text-2xl font-bold">Tournament Standings</h1>
+      <p class="text-gray-500 text-sm">{{ format_quota }}-over format</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <a href="{{ url_for('add_match') }}"
+         class="bg-blue-700 hover:bg-blue-800 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow transition">
+        + Add Match
+      </a>
+      <button @click="refresh()"
+              class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium px-4 py-2 rounded-lg transition"
+              :disabled="loading">
+        <span x-show="!loading">Refresh</span>
+        <span x-show="loading">Loading…</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Desktop table -->
+  {% if table %}
+  <div class="hidden md:block bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    <table class="w-full text-sm" id="standings-table">
+      <thead>
+        <tr class="bg-gray-100 text-gray-600 uppercase text-xs tracking-wider">
+          <th class="px-4 py-3 text-left w-12">#</th>
+          <th class="px-4 py-3 text-left">Team</th>
+          <th class="px-4 py-3 text-center">P</th>
+          <th class="px-4 py-3 text-right">Runs For</th>
+          <th class="px-4 py-3 text-right">Overs For</th>
+          <th class="px-4 py-3 text-right">Runs Agst</th>
+          <th class="px-4 py-3 text-right">Overs Agst</th>
+          <th class="px-4 py-3 text-right font-bold">Net NRR</th>
+        </tr>
+      </thead>
+      <tbody id="standings-body">
+        {% for row in table %}
+        <tr class="border-t border-gray-100 {% if loop.index == 1 %}bg-blue-50{% elif loop.index % 2 == 0 %}bg-gray-50{% endif %} hover:bg-blue-50/50 transition">
+          <td class="px-4 py-3 font-bold text-gray-500">{{ loop.index }}</td>
+          <td class="px-4 py-3 font-semibold">{{ row.team }}</td>
+          <td class="px-4 py-3 text-center">{{ row.matches }}</td>
+          <td class="px-4 py-3 text-right tabular-nums">{{ row.runs_for|int }}</td>
+          <td class="px-4 py-3 text-right tabular-nums">{{ "%.1f"|format(row.overs_for) }}</td>
+          <td class="px-4 py-3 text-right tabular-nums">{{ row.runs_against|int }}</td>
+          <td class="px-4 py-3 text-right tabular-nums">{{ "%.1f"|format(row.overs_against) }}</td>
+          <td class="px-4 py-3 text-right font-bold tabular-nums
+              {% if row.nrr > 0 %}text-green-600{% elif row.nrr < 0 %}text-red-600{% else %}text-gray-500{% endif %}">
+            {{ "%+.3f"|format(row.nrr) }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Mobile card view -->
+  <div class="md:hidden space-y-3">
+    {% for row in table %}
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 {% if loop.index == 1 %}border-blue-400 ring-1 ring-blue-200{% endif %}">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-xs font-bold text-gray-400">#{{ loop.index }}</span>
+        <span class="font-bold text-sm">{{ row.team }}</span>
+        <span class="text-xs text-gray-500">{{ row.matches }} match{{ 'es' if row.matches != 1 }}</span>
+      </div>
+      <div class="grid grid-cols-2 gap-2 text-xs text-gray-600">
+        <div>Runs For: <span class="font-semibold tabular-nums">{{ row.runs_for|int }}</span></div>
+        <div>Overs For: <span class="font-semibold tabular-nums">{{ "%.1f"|format(row.overs_for) }}</span></div>
+        <div>Runs Agst: <span class="font-semibold tabular-nums">{{ row.runs_against|int }}</span></div>
+        <div>Overs Agst: <span class="font-semibold tabular-nums">{{ "%.1f"|format(row.overs_against) }}</span></div>
+      </div>
+      <div class="mt-2 text-right text-sm font-bold tabular-nums
+          {% if row.nrr > 0 %}text-green-600{% elif row.nrr < 0 %}text-red-600{% else %}text-gray-500{% endif %}">
+        NRR: {{ "%+.3f"|format(row.nrr) }}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center text-gray-400">
+    <p class="text-lg mb-2">No matches logged yet.</p>
+    <a href="{{ url_for('add_match') }}" class="text-blue-600 hover:underline text-sm font-medium">Add your first match →</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

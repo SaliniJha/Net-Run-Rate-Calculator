@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Add Match — ICC NRR Calculator{% endblock %}
+
+{% block content %}
+  {% set match_json = 'null' %}
+  {% set heading = 'Add Match' %}
+  {% set action_url = url_for('add_match') %}
+  {% set submit_label = 'Add Match' %}
+  {% include "_match_form.html" %}
+{% endblock %}

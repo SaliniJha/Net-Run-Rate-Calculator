@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Setup Tournament — ICC NRR Calculator{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto mt-12" x-data="setupForm()">
+  <div class="bg-white rounded-xl shadow-md border border-gray-200 p-8 text-center">
+    <h1 class="text-2xl font-bold text-gray-800 mb-2">ICC Net Run Rate Calculator</h1>
+    <p class="text-gray-500 text-sm mb-8">
+      Set up a tournament to begin tracking NRR standings from match results.
+    </p>
+
+    {% if has_tournament %}
+      <!-- Tournament already active -->
+      <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6 text-sm text-green-800">
+        A tournament is already active. You can add matches or reset to start over.
+      </div>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+        <a href="{{ url_for('add_match') }}"
+           class="bg-blue-700 hover:bg-blue-800 text-white font-semibold px-6 py-2.5 rounded-lg shadow transition text-sm w-full sm:w-auto text-center">
+          Add Match
+        </a>
+        <a href="{{ url_for('standings') }}"
+           class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold px-6 py-2.5 rounded-lg transition text-sm w-full sm:w-auto text-center">
+          View Standings
+        </a>
+      </div>
+
+    {% else %}
+      <!-- First-time setup -->
+      <form method="post" action="{{ url_for('index') }}" class="space-y-6 text-left">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Match format</label>
+          <div class="grid grid-cols-2 gap-3">
+            <button type="button"
+                    class="border-2 rounded-lg py-3 text-sm font-semibold transition"
+                    :class="form.format_quota === '20' ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-gray-200 hover:border-gray-400 text-gray-600'"
+                    @click="form.format_quota = '20'">
+              T20I — 20 overs
+            </button>
+            <button type="button"
+                    class="border-2 rounded-lg py-3 text-sm font-semibold transition"
+                    :class="form.format_quota === '50' ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-gray-200 hover:border-gray-400 text-gray-600'"
+                    @click="form.format_quota = '50'">
+              ODI — 50 overs
+            </button>
+          </div>
+          <input type="hidden" name="format_quota" :value="form.format_quota">
+        </div>
+        <button type="submit"
+                class="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2.5 rounded-lg shadow transition text-sm">
+          Start Tournament
+        </button>
+      </form>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
